@@ -1,0 +1,15 @@
+TIME STEPS:2400
+TRAJECTORY DIRECTORY:../Tetracene_indo_traj/tetracene
+HAMILTONIAN:PM7
+active space for tetracene:38 39 40 41 42 43 44 45
+ACTIVE SPACE RANGE:39 40 41 42 43 44 45 46
+sd basis is written as a vector of strings using the indexing of the active space above starting with zero
+each string is a slater determinant the first being the ground state determinant and the others are excited state determinants
+Use 1 for some extra output when debugging
+DEBUG:0
+list number of electrons being modeled and number of excitations ex.(4 , 3)
+SLATER DETERMINANT BASIS: 4 , 4
+0 1 2 3
+0 1 4 3
+0 1 2 4
+0 1 2 5

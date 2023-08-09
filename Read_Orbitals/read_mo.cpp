@@ -140,7 +140,7 @@ int main(int argc , char** argv)
     {
         cout << "using this part" << endl;
         int t=0;
-        double step_size=0.48;
+        double step_size=1.0; //0.48;
         //PM7 out1(base_filename+"_"+"0"+".out",debug);
         //int numbOfMOs = out1.numOfMOs;
 //commenting starts here
@@ -173,11 +173,11 @@ int main(int argc , char** argv)
               cout << "finished copying CI energies from time " << t << endl;
               Eig2 = info2.CI_Energies;
               cout << "finished copying CI energies from time " << t+1 << endl;
-              t_overlap_mat=info1.time_overlap(info1.OrbitalVectors, info2.OrbitalVectors, step_size, info1.active_space);
+              //t_overlap_mat=info1.time_overlap(info1.OrbitalVectors, info2.OrbitalVectors, step_size, info1.active_space);
               cout << "finished time overlap matrix" << endl;
               ovlp_mat = info1.overlap(info1.OrbitalVectors, info1.active_space);
               cout << "finished overlap matrix" << endl;
-              //nac_mat=info1.central_diff_deriv(MOs1, MOs2, step_size, info1.active_space);
+              nac_mat=info1.central_diff_deriv(MOs1, MOs2, step_size, active_space);
               ci_mat=info1.CI_Coeffs;
               cout << "finished CI matrix" << endl;
               //info1.write_Hvib_matrix_preCI(base_filename, t, info1.active_space, info1.SD_basis, nac_mat);
@@ -189,7 +189,7 @@ int main(int argc , char** argv)
               info1.write_re_matrix(base_filename+"_SD_mid_E", t, avg_SD_energy);
               info1.write_re_matrix(base_filename+"_CI_mid_E", t, avg_CI_energy);
               info1.write_re_matrix(base_filename+"_S", t, ovlp_mat);
-              //info1.write_im_matrix(base_filename+"_vib", t, nac_mat);
+              info1.write_im_matrix(base_filename+"_vib", t, nac_mat);
               info1.write_re_matrix(base_filename+"_T", t, ci_mat);
               t++;
           }while(t<time_steps);

@@ -346,9 +346,6 @@ void PM7::CI_coeff(string filename)
             for(int k=1; k <=SDs ; k++)
             {               
                 getline(InFile,runner);
-                //getline(InFile,runner);
-                //getline(InFile,runner);
-                //getline(InFile,runner);                                                                                                          //###
                 GrabLine = runner;                                                                                                           //###
                 //cout<< "found " << IdCI_coeff << " |" << GrabLine << endl;                                                                   //###
                 vector<double> tempVec;
@@ -736,13 +733,16 @@ vector<vector<double> > PM7::central_diff_deriv(vector<vector<double> > time_poi
     clock_t start, end;
     start = clock();
     ios_base::sync_with_stdio(true);
+    //vector<vector<double> > central_difference_deriv(numOfMOs, vector<double>(numOfMOs)); 
     vector<vector<double> > central_difference_deriv(active_space.size()+1, vector<double>(active_space.size()+1)); 
-
+    cout << "using central difference method active space size:"<< active_space.size() << endl;
               for(int index1=0;index1<active_space.size();index1++)
+              //for(int index1=0;index1<numOfMOs;index1++)
               {
                   for(int index2=0;index2<active_space.size();index2++)
+                  //for(int index2=0;index2<numOfMOs;index2++)
                   {    
-                      for(int coeff=1;coeff<=numOfMOs; coeff++)
+                      for(int coeff=1;coeff<numOfMOs; coeff++)
                       {
                          //cout << time_point1[active_space[index1]][coeff] << endl;
                           central_difference_deriv[index1+1][index2+1] += ihbar * 1/(2*step_size)
@@ -1173,178 +1173,6 @@ void PM7::MOs(string filename)
     }
 }
 
-//void PM7::numMOs(vector<string> VecMOs)
-//{
-//    vector<string> atoms; 
-//    vector<int> numOfAtoms;
-//    vector<string> cutPart;
-//    cout << "this it the size of the vector " << VecMOs.size() << endl;
-////    for(int i=0; i<VecMOs.size();i++)
-////    {
-////        cout << VecMOs[i] << endl;
-////
-////    }
-// 
-//    for(int i=2; i<VecMOs.size();i++)
-//    {
-//        if(VecMOs[i]== "="){break;}
-//        cutPart.push_back(VecMOs[i]); 
-//    }
-//    
-//    for(int i=0; i<cutPart.size(); i++)
-//    {
-//      for(int j=0; j<cutPart[i].size(); j++)
-//      {
-//        //cout << "i " << i << " j " << j<< endl;
-//        if(isalpha(cutPart[i][j]) && isalpha(cutPart[i][j+1]))
-//        {
-//            cout << cutPart[i][j] << cutPart[i][j+1] << endl;
-//            string temp; 
-//            temp.push_back(cutPart[i][j] + cutPart[i][j+1]); 
-//            atoms.push_back(temp);
-//            j++;
-//        }
-////        if(isalpha(cutPart[i][j]) && isdigit(cutPart[i][j+1]))
-//        else if(isalpha(cutPart[i][j]) )
-//        {
-//            cout << cutPart[i][j] << endl;
-//            string temp2;
-//            temp2.push_back(cutPart[i][j]); 
-//            atoms.push_back(temp2);
-//        }
-//        else if(isdigit(cutPart[i][j]))
-//        {
-//           string temp3;
-//           if(isdigit(cutPart[i][j]) && isdigit(cutPart[i][j+1]))
-//             {
-//               cout<<"digits " << cutPart[i][j] << cutPart[i][j+1] << endl;
-//               temp3 += cutPart[i][j];
-//               temp3 += cutPart[i][j+1];
-//               numOfAtoms.push_back(stoi(temp3));
-//               j++;
-//             }
-//           else{
-//               cout << "digit" << cutPart[i][j] << endl;
-//               temp3.push_back(cutPart[i][j]);
-//               numOfAtoms.push_back(stoi(temp3));
-//               }
-//        } 
-//      }
-//    }
-//
-////    for(int i=0; i<numOfAtoms.size();i++)
-////    {
-////        cout << "printing atom numbers" << endl;
-////        cout << numOfAtoms[i] << endl;
-////        cout << "printing atom numbers" << endl;
-////    }
-//   
-//    int num=0;
-//    for(int i=0; i<atoms.size(); i++)
-//    {
-//       //cout << str2int(atoms[i]) << endl;
-//       switch(str2int(atoms[i]))
-//       {
-//           case 4:
-//               num += 4 * numOfAtoms[i];
-//               //cout << num << endl;
-//               break;
-//
-//           case 1:
-//               //cout << "num of hydrogens " << numOfAtoms[i] << endl;
-//               //cout << "adding hydrogens " << num << "then " ; 
-//               num += 1 * numOfAtoms[i] ;
-//               //cout << num << endl;
-//               break;
-//           default:
-//               cout << "No matching case" << endl; 
-//       }
-//        //cout << num << endl;
-//    }
-//    numOfMOs = num;
-//    cout << "number of MOs " << numOfMOs << endl;
-//}
-//
-//int PM7::str2int(string element)
-//{
-//   int atomicNumber;
-//   if(element == "C"){atomicNumber=4;}
-//   if(element == "H"){atomicNumber=1;}
-//   if(element == "Ag"){atomicNumber=6;}
-//   return atomicNumber;
-//}
-//
-//
-//void PM7::getMOLines()
-//{
-//    cout << lines.size() << endl;
-//    int checkLine;
-//    for(int i=0; i<lines.size(); i++)
-//    {
-//        vector<string> tempLine;
-//        istringstream line(lines[i]);
-//        for(int ele=0; ele < lines[i].size(); ele++)
-//        {
-//            string splitLine;
-//            line >> splitLine;
-//            if(splitLine != "")
-//            {
-//                tempLine.push_back(splitLine);
-//            }
-//        }
-//
-//        for(int bits=0; bits < tempLine.size(); bits++)
-//        {
-//            //cout << tempLine.size()<< "  ";
-//            if(tempLine[bits] =="Root")
-//            {
-//                checkLine= i+5;
-//                for(int k=checkLine+1; k<checkLine+numOfMOs+1 ; k++)
-//                {
-//                    if(lines[k] == ""){continue;}
-//                    else{MOLines.push_back(lines[k]);}
-//                }
-//            }
-////            if(i >= checkLine && i < checkLine + numOfMOs+1 && checkLine != 0 )
-////            {
-////                MOLines.push_back(lines[i]);
-//////                cout<< bits << "/" << tempLine[bits] << "  " << endl;
-////            }
-//        }
-////            cout << endl;
-//        
-//    }
-//}
-//
-
-//vector<vector<double> > PM7::MOs()
-//{
-//    vector<vector<double> > MOvec2(numOfMOs,vector<double>(numOfMOs));
-//    cout << "size " << MOLines.size() << endl;
-//    int k=0;
-//    int loopCount=0;
-//    int counter=0;
-//    for(int i=0; i<MOLines.size() ; i++)
-//    {
-//        istringstream splitLine(MOLines[i]);
-//        for(int j=0; j<MOLines[i].size() ; j++)
-//        {
-//            string element;
-//            splitLine >> element;
-//            if(j>=3)
-//            {
-//                if(element==""){break;}
-//                if(counter == numOfMOs){counter=0 ; loopCount++;}
-//                //cout <<" gt i " <<counter<<" "<< (j-3)+(loopCount*8) << "  "<< element << "  " ;
-//                MOvec2[counter][j-3+(loopCount*8)]= stod(element);          
-//            }
-//        }
-//        counter++;
-//        //cout << endl;
-//    }
-//    return this->MOvec = MOvec2;
-//
-//}
 
 
 

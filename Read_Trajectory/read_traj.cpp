@@ -24,8 +24,9 @@ int main(int argc, char **argv)
         string cursor, save_line;
         ifstream input_parse;  
         vector<string> input_lines;
-        string parsing_file, trajectory_infiles, trajectory_directory, time_steps, charge, convergence_criteria;
+        string parsing_file, trajectory_infiles, trajectory_directory, time_steps, charge, method,convergence_criteria;
         input_parse.open(input_file, ios::in);
+        string method_id="HAMILTONIAN:";
         string time_step_id="TIME STEPS:";
         string trajectory_id="TRAJECTORY FILE:";
         string trajectory_directory_id="TRAJECTORY DIRECTORY:";
@@ -47,6 +48,13 @@ int main(int argc, char **argv)
                 temp_string.erase(0,11);
                 time_steps = temp_string;
                 cout <<"number of time steps " << time_steps << endl;
+            }
+            else if(temp_string.find(method_id) != std::string::npos )
+            {
+                cout << temp_string << endl;
+                temp_string.erase(0,12);
+                method = temp_string;
+                cout <<"using " << method << " Hamiltonian" << endl;
             }
             else if(temp_string.find(convergence_id) != std::string::npos )
             {
@@ -111,9 +119,9 @@ int i = 0;
 do{
 string trajectory_infiles_function_in = trajectory_infiles +"_"+ to_string(i) +".mop";
 
-QE_TO_MOPAC(parsing_file,1+i , trajectory_infiles_function_in , trajectory_directory, charge);
+QE_TO_MOPAC(parsing_file,1+i , trajectory_infiles_function_in , trajectory_directory, charge, convergence_criteria, method);
 i++; 
-if(i % 20 == 0) {std::this_thread::sleep_for(std::chrono::seconds(0) )  ;}
+if(i % 20 == 0) {std::this_thread::sleep_for(std::chrono::seconds(5) )  ;}
 
 }while(i<stoi(time_steps));
 

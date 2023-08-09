@@ -4,7 +4,7 @@
 #include<sstream>
 #include<vector>
 #include<bits/stdc++.h>//insert function
-#include <filesystem>
+//#include <filesystem>
 
 
 //#include<cstdlib>//make directories
@@ -146,7 +146,8 @@ void run_mopac_calculation(string mopac_input_name, string DirectoryName)
 {
     string mopac_exec_path, mopac_submit_script_path, path_begin, separator;
     path_begin = " ./"; separator = "/";
-    mopac_exec_path ="/home/gieseking/Programs/MOPAC2016/MOPAC2016.exe";
+    mopac_exec_path ="/home/alvadillon/software/MOPAC_clean/MOPAC2016.exe";
+    //mopac_exec_path ="/home/gieseking/Programs/MOPAC2016/MOPAC2016.exe";
     ifstream path;
     path.open(mopac_exec_path);
     if(path)
@@ -168,15 +169,15 @@ void run_mopac_calculation(string mopac_input_name, string DirectoryName)
 
 
 //WRITES THE INPUT FILES FOR MOPAC #######################################################################
-void write_mopac_input(vector<vector<string> > atomic_coordinates, string FileName, string DirectoryName, string charge)
+void write_mopac_input(vector<vector<string> > atomic_coordinates, string FileName, string DirectoryName, string charge, string cutoff_criteria, string method)
 {
-     string cutoff_criteria="0.000001";
+     //string cutoff_criteria;//="0.000001";
      string name = FileName;
      string directory ="./"+ DirectoryName + "/";
      ofstream File;
      File.open(directory+name);
      //File << "INDO RCI MAXCI=4000 WRTCI=1000 CHARGE="<<charge << " RELSCF="<<cutoff_criteria<< endl;
-     File << "INDO CHARGE="<<charge << " RELSCF="<<cutoff_criteria<< endl;
+     File << method <<" CHARGE="<<charge << " RELSCF="<<cutoff_criteria << " ALLVEC"<< endl;
      File << endl;
      File << endl;
      for(int i=0; i <atomic_coordinates[0].size(); i++)
@@ -190,7 +191,7 @@ void write_mopac_input(vector<vector<string> > atomic_coordinates, string FileNa
 
 
 //STRINGS TOGETHER FUNCTIONS TO READ GEOMETRY FROM TRAJECTORY FILE, WRITE MOPAC INPUT FILE, AND RUN MOPAC CALCULATION.
-void QE_TO_MOPAC(string filename,int geometry_num,string base_mopac_filename, string directory_name, string charge)
+void QE_TO_MOPAC(string filename,int geometry_num,string base_mopac_filename, string directory_name, string charge, string cutoff_criteria, string method)
 {
     ofstream xyz_output;
     vector<string> coords;
@@ -204,7 +205,7 @@ void QE_TO_MOPAC(string filename,int geometry_num,string base_mopac_filename, st
     {
         xyz_output << "  " << element_array[0][i] << "      " << element_array[1][i] << "      " << element_array[2][i] << "      " << element_array[3][i] << "      " << endl;
     }
-    write_mopac_input(element_array, base_mopac_filename, directory_name, charge);
+    write_mopac_input(element_array, base_mopac_filename, directory_name, charge, cutoff_criteria, method);
     run_mopac_calculation(base_mopac_filename, directory_name);
 }
 //STRINGS TOGETHER FUNCTIONS TO READ GEOMETRY FROM TRAJECTORY FILE, WRITE MOPAC INPUT FILE, AND RUN MOPAC CALCULATION.

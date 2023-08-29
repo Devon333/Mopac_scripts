@@ -10,13 +10,15 @@ int main(int argc , char** argv)
         ifstream input_parse;  
         vector<string> input_lines;
         int time_steps;
+        double step_size;
         string debug;
         vector<int> active_space;
         vector<vector<int> > SD_basis;
-        string hamiltonian,usingPM7, base_filename;
+        string hamiltonian, usingINDO, base_filename;
 
         input_parse.open(input_file, ios::in);
         string time_step_id="TIME STEPS:";
+        string step_size_id="STEP SIZE:";
         string trajectory_directory_id="TRAJECTORY DIRECTORY:";
         string hamiltonian_id="HAMILTONIAN:";
         string active_space_id="ACTIVE SPACE RANGE:";
@@ -74,6 +76,13 @@ int main(int argc , char** argv)
                     cout << endl;
                 }
             }
+            else if(temp_string.find(step_size_id) != std::string::npos )
+            {
+                cout << temp_string << endl;
+                temp_string.erase(0,10);
+                step_size = stoi(temp_string);
+                cout <<"step size in fs: " << step_size << endl;
+            }
             else if(temp_string.find(time_step_id) != std::string::npos )
             {
                 cout << temp_string << endl;
@@ -91,11 +100,11 @@ int main(int argc , char** argv)
             {
                 temp_string.erase(0,12); 
                 hamiltonian = temp_string;
-                usingPM7="no";
-                if(hamiltonian == "PM7")
+                usingINDO="no";
+                if(hamiltonian == "INDO")
                 {
-                    cout <<"Using PM7 Hamiltonian" << endl;
-                    usingPM7="yes"; 
+                    cout <<"Using INDO Hamiltonian" << endl;
+                    usingINDO="yes"; 
                 }
                 cout << "using Hamiltonian " << hamiltonian << endl;
             }
@@ -136,11 +145,11 @@ int main(int argc , char** argv)
 
 
 
-    if(usingPM7 =="yes")
+    if(usingINDO =="yes")
     {
         cout << "using this part" << endl;
         int t=0;
-        double step_size=1.0; //0.48;
+        //double step_size=1.0; //0.48;
         //PM7 out1(base_filename+"_"+"0"+".out",debug);
         //int numbOfMOs = out1.numOfMOs;
 //commenting starts here
@@ -161,9 +170,9 @@ int main(int argc , char** argv)
               vector<vector<double> > avg_CI_energy;
               vector<vector<double> > nac_mat;
               vector<vector<double> > t_overlap_mat, ovlp_mat, ci_mat;
-              PM7 info1(base_filename+"_"+to_string(t)+".out",debug);
+              PM7 info1(base_filename+"_"+to_string(t)+".out", hamiltonian, debug);
               cout << base_filename+"_"+to_string(t)+".out"<< endl;
-              PM7 info2(base_filename+"_"+to_string(t+1)+".out",debug);
+              PM7 info2(base_filename+"_"+to_string(t+1)+".out", hamiltonian, debug);
               cout << base_filename+"_"+to_string(t+1)+".out"<< endl;
               MOs1 = info1.OrbitalVectors;
               cout << "finished copying Orbitals from time " << t << endl;
@@ -173,7 +182,7 @@ int main(int argc , char** argv)
               cout << "finished copying CI energies from time " << t << endl;
               Eig2 = info2.CI_Energies;
               cout << "finished copying CI energies from time " << t+1 << endl;
-              //t_overlap_mat=info1.time_overlap(info1.OrbitalVectors, info2.OrbitalVectors, step_size, info1.active_space);
+              t_overlap_mat=info1.time_overlap(info1.OrbitalVectors, info2.OrbitalVectors, step_size, info1.active_space);
               cout << "finished time overlap matrix" << endl;
               ovlp_mat = info1.overlap(info1.OrbitalVectors, info1.active_space);
               cout << "finished overlap matrix" << endl;
@@ -194,6 +203,63 @@ int main(int argc , char** argv)
               t++;
           }while(t<time_steps);
      }
- }
 
+
+    if(usingINDO =="no")
+    {
+        cout << "using this part" << endl;
+        int t=0;
+        //double step_size=1.0; //0.48;
+        //PM7 out1(base_filename+"_"+"0"+".out",debug);
+        //int numbOfMOs = out1.numOfMOs;
+//commenting starts here
+        //double ihbar = -0.0483781328; // -i hbar units Ry * fs
+        vector<vector<double>> MOs1, MOs2, Eig1, Eig2;
+        //vector<vector<double> > MOs1, MOs2;
+        //vector<vector<double>> t_overlap, nac_mat, avg_Eig;
+        //vector<vector<double>> MO_Deriv_Avg;
+        //vector<vector<double> > MO_DERIV(numbOfMOs,vector<double>(numbOfMOs,0.0));
+        //vector<vector<double> > MO_DERIV_AVG(numbOfMOs,vector<double>(numbOfMOs,0.0));
+
+        clock_t start, end;
+        start = clock();
+        ios_base::sync_with_stdio(true);
+
+        do{
+              vector<vector<double> > avg_MO_energy;
+              vector<vector<double> > nac_mat;
+              vector<vector<double> > t_overlap_mat, ovlp_mat, ci_mat;
+              PM7 info1(base_filename+"_"+to_string(t)+".out", hamiltonian, debug);
+              cout << base_filename+"_"+to_string(t)+".out"<< endl;
+              PM7 info2(base_filename+"_"+to_string(t+1)+".out", hamiltonian, debug);
+              cout << base_filename+"_"+to_string(t+1)+".out"<< endl;
+              MOs1 = info1.OrbitalVectors;
+              cout << "finished copying Orbitals from time " << t << endl;
+              MOs2 = info2.OrbitalVectors;
+              cout << "finished copying Orbitals from time " << t+1 << endl;
+              Eig1 = info1.CI_Energies; 
+              cout << "finished copying CI energies from time " << t << endl;
+              Eig2 = info2.CI_Energies;
+              cout << "finished copying CI energies from time " << t+1 << endl;
+              t_overlap_mat=info1.time_overlap(info1.OrbitalVectors, info2.OrbitalVectors, step_size, info1.active_space);
+              cout << "finished time overlap matrix" << endl;
+              ovlp_mat = info1.overlap(info1.OrbitalVectors, info1.active_space);
+              cout << "finished overlap matrix" << endl;
+              nac_mat=info1.central_diff_deriv(MOs1, MOs2, step_size, active_space);
+              //info1.write_Hvib_matrix_preCI(base_filename, t, info1.active_space, info1.SD_basis, nac_mat);
+              avg_MO_energy=info1.average_matrix(info1.EigenvalueMatrix,info2.EigenvalueMatrix,info1.active_space);              
+              //avg_CI_energy=info1.average_matrix(info1.CI_Energies,info2.CI_Energies,info1.active_space);              
+              //avg_SD_energy=info1.CI_midpoint(info1.SD_Energies,info2.SD_Energies);
+              //avg_CI_energy=info1.CI_midpoint(info1.CI_Energies,info2.CI_Energies);              
+              //cout << "finished CI midpoint energy matrix" << endl;
+              info1.write_re_matrix(base_filename+"_St", t, t_overlap_mat); 
+              //info1.write_re_matrix(base_filename+"_SD_mid_E", t, avg_SD_energy);
+              //info1.write_re_matrix(base_filename+"_CI_mid_E", t, avg_CI_energy);
+              info1.write_re_matrix(base_filename+"_S", t, ovlp_mat);
+              //info1.write_im_matrix(base_filename+"_vib", t, nac_mat);
+              //info1.write_re_matrix(base_filename+"_T", t, ci_mat);
+              t++;
+          }while(t<time_steps);
+     }
+ }
 

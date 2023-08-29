@@ -1,6 +1,7 @@
 TIME STEPS:5
-TRAJECTORY DIRECTORY:../READ_TRAJECTORY/fileMadeThis/fileMadeThis
-HAMILTONIAN:PM7
+STEP SIZE:1
+TRAJECTORY DIRECTORY:../../../../code/NAMD_scripts/tetraceneTraj/tetracene
+HAMILTONIAN:47
 active space for tetracene:38 39 40 41 42 43 44 45
 ACTIVE SPACE RANGE:10
 Use 1 for some extra output when debugging

@@ -66,17 +66,17 @@ class PM7{
 //        vector<vector<string> > MOvec(numOfMOs,vector<string>(numOfMOs));
 
       //CLASS CONSTRUCTORS 
-       PM7(string filename, string debug){
-           //vector<string>formulaLine;
-           //Read(filename);
+       PM7(string filename, string hamiltonian, string debug){
            MOs(filename);
            cout << "finished with MO function "<< endl;
-           SD_energies(filename);
-           cout << "finished with SD energies function "<< endl;
-           CI_coeff(filename);
-           cout << "finished with CI coeff function "<< endl;
-           CI_energies(filename); 
-           cout << "finished with CI energies function "<< endl;
+           if(hamiltonian == "INDO"){
+               SD_energies(filename);
+               cout << "finished with SD energies function "<< endl;
+               CI_coeff(filename);
+               cout << "finished with CI coeff function "<< endl;
+               CI_energies(filename); 
+               cout << "finished with CI energies function "<< endl;
+           }
 //           getMOLines();
 //           MOs();
 //           for(int i=0; i<MOvec.size(); i++)

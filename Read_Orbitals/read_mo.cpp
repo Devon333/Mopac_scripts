@@ -1,5 +1,6 @@
 #include"READ_MO.h"
-#include"PM7.h"
+//#include"PM7.h"
+#include"MopacOutput.h"
 #include <bits/stdc++.h>
 
 
@@ -170,9 +171,9 @@ int main(int argc , char** argv)
               vector<vector<double> > avg_CI_energy;
               vector<vector<double> > nac_mat;
               vector<vector<double> > t_overlap_mat, ovlp_mat, ci_mat;
-              PM7 info1(base_filename+"_"+to_string(t)+".out", hamiltonian, debug);
+              MopacOutput info1(base_filename+"_"+to_string(t)+".out", hamiltonian, debug);
               cout << base_filename+"_"+to_string(t)+".out"<< endl;
-              PM7 info2(base_filename+"_"+to_string(t+1)+".out", hamiltonian, debug);
+              MopacOutput info2(base_filename+"_"+to_string(t+1)+".out", hamiltonian, debug);
               cout << base_filename+"_"+to_string(t+1)+".out"<< endl;
               MOs1 = info1.OrbitalVectors;
               cout << "finished copying Orbitals from time " << t << endl;
@@ -229,31 +230,31 @@ int main(int argc , char** argv)
               vector<vector<double> > avg_MO_energy;
               vector<vector<double> > nac_mat;
               vector<vector<double> > t_overlap_mat, ovlp_mat, ci_mat;
-              PM7 info1(base_filename+"_"+to_string(t)+".out", hamiltonian, debug);
+              MopacOutput info1(base_filename+"_"+to_string(t)+".out", hamiltonian, debug);
               cout << base_filename+"_"+to_string(t)+".out"<< endl;
-              PM7 info2(base_filename+"_"+to_string(t+1)+".out", hamiltonian, debug);
+              MopacOutput info2(base_filename+"_"+to_string(t+1)+".out", hamiltonian, debug);
               cout << base_filename+"_"+to_string(t+1)+".out"<< endl;
               MOs1 = info1.OrbitalVectors;
               cout << "finished copying Orbitals from time " << t << endl;
               MOs2 = info2.OrbitalVectors;
               cout << "finished copying Orbitals from time " << t+1 << endl;
-              Eig1 = info1.CI_Energies; 
-              cout << "finished copying CI energies from time " << t << endl;
-              Eig2 = info2.CI_Energies;
-              cout << "finished copying CI energies from time " << t+1 << endl;
-              t_overlap_mat=info1.time_overlap(info1.OrbitalVectors, info2.OrbitalVectors, step_size, info1.active_space);
+              Eig1 = info1.EigenvalueMatrix; 
+              cout << "finished copying MO energies from time " << t << endl;
+              Eig2 = info2.EigenvalueMatrix;
+              cout << "finished copying MO energies from time " << t+1 << endl;
+              t_overlap_mat=info1.time_overlap(info1.OrbitalVectors, info2.OrbitalVectors, step_size, active_space);
               cout << "finished time overlap matrix" << endl;
-              ovlp_mat = info1.overlap(info1.OrbitalVectors, info1.active_space);
+              ovlp_mat = info1.overlap(info1.OrbitalVectors, active_space);
               cout << "finished overlap matrix" << endl;
               nac_mat=info1.central_diff_deriv(MOs1, MOs2, step_size, active_space);
               //info1.write_Hvib_matrix_preCI(base_filename, t, info1.active_space, info1.SD_basis, nac_mat);
-              avg_MO_energy=info1.average_matrix(info1.EigenvalueMatrix,info2.EigenvalueMatrix,info1.active_space);              
+              avg_MO_energy=info1.average_matrix(info1.EigenvalueMatrix,info2.EigenvalueMatrix,active_space);              
               //avg_CI_energy=info1.average_matrix(info1.CI_Energies,info2.CI_Energies,info1.active_space);              
-              //avg_SD_energy=info1.CI_midpoint(info1.SD_Energies,info2.SD_Energies);
+              avg_MO_energy=info1.CI_midpoint(info1.SD_Energies,info2.SD_Energies);
               //avg_CI_energy=info1.CI_midpoint(info1.CI_Energies,info2.CI_Energies);              
               //cout << "finished CI midpoint energy matrix" << endl;
               info1.write_re_matrix(base_filename+"_St", t, t_overlap_mat); 
-              //info1.write_re_matrix(base_filename+"_SD_mid_E", t, avg_SD_energy);
+              info1.write_re_matrix(base_filename+"_MO_mid_E", t, avg_MO_energy);
               //info1.write_re_matrix(base_filename+"_CI_mid_E", t, avg_CI_energy);
               info1.write_re_matrix(base_filename+"_S", t, ovlp_mat);
               //info1.write_im_matrix(base_filename+"_vib", t, nac_mat);

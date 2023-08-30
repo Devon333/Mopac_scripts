@@ -1,8 +1,9 @@
 TIME STEPS:5
 STEP SIZE:1
 TRAJECTORY DIRECTORY:../../../../code/NAMD_scripts/tetraceneTraj/tetracene
-HAMILTONIAN:47
+HAMILTONIAN:INDO
+if not using INDO one must define the active space
 active space for tetracene:38 39 40 41 42 43 44 45
-ACTIVE SPACE RANGE:10
+ACTIVE SPACE RANGE:38 39 40 41 42 43 44 45
 Use 1 for some extra output when debugging
 DEBUG:0
